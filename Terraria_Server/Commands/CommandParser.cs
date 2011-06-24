@@ -5,7 +5,7 @@ using System.Text;
 using Terraria_Server.Events;
 using Terraria_Server.Commands;
 using Terraria_Server.Plugin;
-
+using Terraria_Server.LuaObjects;
 
 namespace Terraria_Server.Commands
 {
@@ -27,6 +27,18 @@ namespace Terraria_Server.Commands
             if (cSender.getConsoleCommand().getCancelled())
             {
                 return;
+            }
+
+            if (LuaManager.IsInitialised())
+            {
+                object[] result = LuaManager.RunLuaFunction("ConsoleCommandHandler", Line);
+                if (result != null)
+                {
+                    if (result[0].ToString() == "#cancel")
+                    {
+                        return;
+                    }
+                }
             }
 
             string[] commands = Line.Trim().ToLower().Split(' ');
@@ -55,6 +67,17 @@ namespace Terraria_Server.Commands
             if (Line.StartsWith("/"))
             {
                 Line = Line.Remove(0, 1);
+            }
+            if (LuaManager.IsInitialised())
+            {
+                object[] result = LuaManager.RunLuaFunction("PlayerCommandHandler", Line);
+                if (result != null)
+                {
+                    if (result[0].ToString() == "#cancel")
+                    {
+                        return;
+                    }
+                }
             }
             string[] commands = Line.Trim().ToLower().Split(' ');
             if (commands == null || commands.Length <= 0)
@@ -127,7 +150,7 @@ namespace Terraria_Server.Commands
                     }
                 case (int)Commands.Command.PLAYER_ME:
                     {
-                        string Message = Program.mergeStrArray(commands); 
+                        string Message = Program.mergeStrArray(commands);
                         if (sender is Player)
                         {
                             Commands.Me_Say(Message.Remove(0, 3).Trim(), ((Player)sender).whoAmi);
@@ -246,6 +269,16 @@ namespace Terraria_Server.Commands
                 case (int)Commands.Command.COMMAND_NPCSPAWN:
                     {
                         Commands.NPCSpawns(sender);
+                        break;
+                    }
+                case (int)Commands.Command.COMMAND_RELOADLUA:
+                    {
+                        LuaManager.ReloadScript(sender);
+                        break;
+                    }
+                case (int)Commands.Command.COMMAND_LOADLUA:
+                    {
+                        LuaManager.LoadScript(sender, "Scripts/" + commands[1]);
                         break;
                     }
                 default:

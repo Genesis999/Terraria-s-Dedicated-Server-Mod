@@ -53,7 +53,9 @@ namespace Terraria_Server.Commands
             COMMAND_DEOP = 18,
             PLAYER_OPLOGIN = 19,
             PLAYER_OPLOGOUT = 20,
-            COMMAND_NPCSPAWN = 21
+            COMMAND_NPCSPAWN = 21,
+            COMMAND_RELOADLUA = 22,
+            COMMAND_LOADLUA = 23
         }
 
         public static string[] CommandDefinition = new string[] {   "exit",         "reload",       "list",         
@@ -63,7 +65,7 @@ namespace Terraria_Server.Commands
                                                                     "give",         "spawnnpc",     "tp",
 																	"tphere",       "settle",       "op",
                                                                     "deop",         "oplogin",      "oplogout",
-                                                                    "npcspawns"};
+                                                                    "npcspawns", "reloadlua" , "loadlua" };
 
         public static string[] CommandInformation = new string[] {  "Stop & Close The Server.", 
                                                                     "Reload Plugins.", 
@@ -86,7 +88,9 @@ namespace Terraria_Server.Commands
                                                                     "De-OP a player.",
                                                                     "Log in as OP: /oplogin <poassword>",
                                                                     "Log out of OP status.",
-                                                                    "Toggle the state of NPC Spawning."};
+                                                                    "Toggle the state of NPC Spawning.", 
+                                                                    "Reload the currently loaded lua script.",
+                                                                    "Loads a lua script: /loadlua <filename.lua>"};
 
         public static int getCommandValue(string Command)
         {
@@ -358,8 +362,10 @@ namespace Terraria_Server.Commands
                                 {
                                     try
                                     {
-                                    Program.server.getWorld().setTime(Double.Parse(commands[2]), true);
-                                    } catch(Exception) {
+                                        Program.server.getWorld().setTime(Double.Parse(commands[2]), true);
+                                    }
+                                    catch (Exception)
+                                    {
                                         goto ERROR;
                                     }
                                 }
@@ -798,10 +804,10 @@ namespace Terraria_Server.Commands
                 }
             }
 
-            if (((deop && commands.Length > 1) || (!deop && commands.Length > 2)) 
-                && commands[1] != null 
-                && (deop || commands[2] != null) 
-                && commands[1].Trim().Length > 0 
+            if (((deop && commands.Length > 1) || (!deop && commands.Length > 2))
+                && commands[1] != null
+                && (deop || commands[2] != null)
+                && commands[1].Trim().Length > 0
                 && (deop || commands[2].Trim().Length > 0))
             {
                 string player_OP = commands[1].Trim().ToLower();
@@ -825,7 +831,7 @@ namespace Terraria_Server.Commands
                 if (!Program.server.getOpList().Save())
                 {
                     Program.server.notifyOps("OpList Failed to Save due to " + sender.getName() + "'s command", true);
-                } 
+                }
                 return;
             }
             else
@@ -907,6 +913,6 @@ namespace Terraria_Server.Commands
                 sender.sendMessage("NPC Spawning is now on!");
             }
         }
-        
+
     }
 }

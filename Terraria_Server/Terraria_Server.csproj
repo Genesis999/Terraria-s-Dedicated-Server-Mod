@@ -88,6 +88,9 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LuaInterface">
+      <HintPath>.\LuaInterface.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -113,7 +116,6 @@
     <Compile Include="Chest.cs" />
     <Compile Include="ClientSock.cs" />
     <Compile Include="Collision.cs" />
-    <Compile Include="Color.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandParser.cs" />
     <Compile Include="Dust.cs" />
@@ -126,8 +128,11 @@
     <Compile Include="Item.cs" />
     <Compile Include="Liquid.cs" />
     <Compile Include="LiquidBuffer.cs" />
+    <Compile Include="Lua\LuaFunctions.cs" />
+    <Compile Include="Lua\LuaManager.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="messageBuffer.cs" />
+    <Compile Include="Misc\Color.cs" />
     <Compile Include="NetMessage.cs" />
     <Compile Include="Netplay.cs" />
     <Compile Include="NPC.cs" />
@@ -157,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Scripts\Default.lua" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -174,6 +180,11 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lua51.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
