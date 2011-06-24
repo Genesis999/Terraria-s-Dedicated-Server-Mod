@@ -2,7 +2,7 @@
 using System.Threading;
 using System.IO;
 using System.Diagnostics;
-
+using Terraria_Server.LuaObjects;
 using Terraria_Server.Commands;
 using System.Collections;
 
@@ -143,6 +143,8 @@ namespace Terraria_Server
                 }
 
                 Console.WriteLine("Initializing...");
+
+                LuaManager.Initialise("Scripts/Default.lua");
 
                 if (Statics.isLinux)
                 {
